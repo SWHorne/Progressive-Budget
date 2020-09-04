@@ -4,25 +4,27 @@ const mongoose = require("mongoose");
 const compression = require("compression");
 
 const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/budget";
 
-const app = express();
 
-app.use(logger("dev"));
+const server = express();
 
-app.use(compression());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+server.use(logger("dev"));
 
-app.use(express.static("public"));
+server.use(compression());
+server.use(express.urlencoded({ extended: true }));
+server.use(express.json());
 
-mongoose.connect("mongodb://localhost/budget", {
-  useNewUrlParser: true,
-  useFindAndModify: false
-});
+server.use(express.static("public"));
+
+mongoose.connect(MONGODB_URI);
 
 // routes
-app.use(require("./routes/api.js"));
+server.use(require("./routes/api.js"));
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
 });
+
+// mongodb+srv://UofUser:<password>@budget.8ucqi.mongodb.net/<dbname>?retryWrites=true&w=majority
+// mongodb+srv://UofUser:AtlasPW2020@budget.8ucqi.mongodb.net/budget?retryWrites=true&w=majority
